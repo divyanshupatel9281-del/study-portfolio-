@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Divyanshu Patel — Day &amp; Night Study Portfolio</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif']
+          },
+          colors: {
+            midnight: '#24345A',
+            amberwarm: '#B45309',
+            deepTeal: '#0F6E6E'
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .progress-ring-circle {
+      transition: stroke-dashoffset 0.35s ease;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+    .task-enter {
+      animation: fadeSlide 0.2s ease-out;
+    }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen transition-colors duration-200">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+
+    <!-- Portfolio Header -->
+    <header class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-sm">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-midnight text-white flex items-center justify-center font-bold text-lg shrink-0 shadow-sm">
+            DP
+          </div>
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight text-midnight dark:text-white">
+                Divyanshu Patel
+              </h1>
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-midnight dark:bg-indigo-950/70 dark:text-indigo-200 border border-indigo-100 dark:border-indigo-900">
+                LNCT B.Tech CSE 1st Sem (A2)
+              </span>
+            </div>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">
+              College: 9:00 AM – 3:30 PM (C.V. Raman Block 2-A2) &bull; Night-Owl Study Portfolio
+            </p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- Mode Switcher -->
+          <div class="inline-flex rounded-xl bg-slate-100 dark:bg-slate-800 p-1" role="group" aria-label="Schedule Mode">
+            <button id="mode-weekday" type="button" class="mode-btn px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors">
+              Weekday
+            </button>
+            <button id="mode-weekend" type="button" class="mode-btn px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors">
+              Weekend
+            </button>
+            <button id="mode-exam" type="button" class="mode-btn px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors">
+              Exam Week
+            </button>
+          </div>
+
+          <!-- Theme Toggle -->
+          <button id="theme-toggle" type="button" title="Toggle Night-Owl Dark Mode"
+            class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+            <i id="theme-icon" data-lucide="moon" class="w-4 h-4"></i>
+            <span id="theme-label">Night Mode</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Stats Summary Grid -->
+    <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <!-- Progress Card -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex items-center gap-3.5 shadow-sm">
+        <div class="relative w-14 h-14 shrink-0">
+          <svg class="w-14 h-14" viewBox="0 0 56 56" aria-hidden="true">
+            <circle cx="28" cy="28" r="22" fill="none" stroke="currentColor" stroke-width="5" class="text-slate-200 dark:text-slate-800" />
+            <circle id="progress-ring" cx="28" cy="28" r="22" fill="none" stroke="currentColor" stroke-width="5"
+              stroke-linecap="round" stroke-dasharray="138.23" stroke-dashoffset="138.23"
+              class="progress-ring-circle text-midnight dark:text-indigo-400" />
+          </svg>
+          <span id="progress-pct" class="absolute inset-0 flex items-center justify-center text-xs font-extrabold text-midnight dark:text-white">0%</span>
+        </div>
+        <div class="min-w-0">
+          <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Today</p>
+          <p id="progress-count" class="text-lg font-extrabold text-slate-900 dark:text-white leading-tight">0 / 6</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 truncate">Blocks done</p>
+        </div>
+      </div>
+
+      <!-- Hours Logged -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm flex flex-col justify-center">
+        <div class="flex items-center justify-between">
+          <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Study Hours</p>
+          <i data-lucide="clock" class="w-4 h-4 text-amber-600 dark:text-amber-400"></i>
+        </div>
+        <p id="hours-logged" class="text-lg font-extrabold text-slate-900 dark:text-white mt-1">0.0 / 5.75h</p>
+        <p id="hours-sub" class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">3.75h College &bull; 2h C++/Proj</p>
+      </div>
+
+      <!-- Weekly Consistency -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm flex flex-col justify-center">
+        <div class="flex items-center justify-between">
+          <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">This Week</p>
+          <i data-lucide="flame" class="w-4 h-4 text-emerald-600 dark:text-emerald-400"></i>
+        </div>
+        <p id="week-days-count" class="text-lg font-extrabold text-slate-900 dark:text-white mt-1">0 / 7 days</p>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Consistency tracker</p>
+      </div>
+
+      <!-- Sleep Window -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm flex flex-col justify-center">
+        <div class="flex items-center justify-between">
+          <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Sleep Goal</p>
+          <i data-lucide="moon-star" class="w-4 h-4 text-indigo-600 dark:text-indigo-400"></i>
+        </div>
+        <p id="sleep-window" class="text-lg font-extrabold text-slate-900 dark:text-white mt-1">1:30 – 8:00 AM</p>
+        <p id="sleep-sub" class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">~6h 30m (9 AM college)</p>
+      </div>
+    </section>
+
+    <!-- Subject Sequence & Daily/Weekly Hours Planner -->
+    <section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h2 class="text-lg font-bold text-midnight dark:text-white flex items-center gap-2">
+            <i data-lucide="book-open-check" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></i>
+            Subject Study Sequence (Kitne Ghante Kya Padhna Hai)
+          </h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            Aapke LNCT CSE 1st Sem timetable ke hisaab se roz ka subject order aur weekly hour split
+          </p>
+        </div>
+
+        <!-- Day Selector for Subject Sequence -->
+        <div id="seq-day-tabs" class="flex flex-wrap gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl" role="tablist" aria-label="Select Day"></div>
+      </div>
+
+      <!-- Selected Day's Ordered Sequence -->
+      <div id="seq-day-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+
+      <!-- Weekly Subject Hours Allocation Summary -->
+      <div class="pt-3 border-t border-slate-200 dark:border-slate-800">
+        <div class="flex items-center justify-between mb-2.5">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+            Weekly Subject-Wise Target (~37.5 hrs / week total)
+          </h3>
+          <span class="text-xs text-slate-500 dark:text-slate-400">8 Subjects (CS101 – CS204)</span>
+        </div>
+        <div id="subject-hours-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5"></div>
+      </div>
+    </section>
+
+    <!-- Main 2-Column Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+      <!-- Left Column: Daily Study Checklist (7 cols) -->
+      <main class="lg:col-span-7 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div>
+            <h2 id="checklist-heading" class="text-lg font-bold text-midnight dark:text-white">Daily Study Checklist</h2>
+            <p id="checklist-subtitle" class="text-xs text-slate-500 dark:text-slate-400">Tick off each block as you finish it</p>
+          </div>
+          <button id="reset-day-btn" type="button"
+            class="self-start sm:self-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+            Reset Ticks
+          </button>
+        </div>
+
+        <!-- Category Filter Tabs -->
+        <div class="flex flex-wrap gap-2 border-b border-slate-200 dark:border-slate-800 pb-3" role="tablist">
+          <button data-filter="all" type="button" class="filter-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors">
+            All Blocks
+          </button>
+          <button data-filter="Shaam (College & Exams)" type="button" class="filter-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors">
+            Shaam (College &amp; Exams)
+          </button>
+          <button data-filter="Raat (Coding & Revision)" type="button" class="filter-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors">
+            Raat (Coding &amp; Revision)
+          </button>
+        </div>
+
+        <!-- Task List -->
+        <div id="task-list" class="space-y-2.5" aria-live="polite"></div>
+
+        <!-- Add Custom Task Form -->
+        <form id="add-task-form" class="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-2.5">
+          <p class="text-xs font-semibold text-slate-600 dark:text-slate-400">Add a custom study goal for today</p>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <input id="new-task-title" type="text" placeholder="Jaise: CS102 Unit 2 numericals ya C++ pointers..."
+              class="flex-1 px-3 py-2 text-sm rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-midnight dark:focus:ring-indigo-500" />
+            <select id="new-task-cat"
+              class="px-3 py-2 text-xs font-medium rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-midnight">
+              <option value="Shaam (College & Exams)">Shaam (College &amp; Exams)</option>
+              <option value="Raat (Coding & Revision)">Raat (Coding &amp; Revision)</option>
+            </select>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <input id="new-task-time" type="text" placeholder="Time slot (optional, e.g. 9:00 PM - 9:45 PM)"
+              class="flex-1 px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-midnight" />
+            <button type="submit"
+              class="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-midnight hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 text-white transition-colors">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              Add Goal
+            </button>
+          </div>
+        </form>
+      </main>
+
+      <!-- Right Column: Focus Timer, Weekly Tracker, Daily Scratchpad (5 cols) -->
+      <aside class="lg:col-span-5 space-y-5">
+
+        <!-- Focus Block Timer -->
+        <section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-sm font-bold text-midnight dark:text-white flex items-center gap-2">
+              <i data-lucide="timer" class="w-4 h-4 text-indigo-600 dark:text-indigo-400"></i>
+              Focus Session Timer
+            </h2>
+            <span id="timer-status" class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Ready</span>
+          </div>
+
+          <div class="text-center py-3">
+            <div id="timer-display" class="text-4xl font-extrabold tracking-tight font-mono text-midnight dark:text-white">25:00</div>
+            <p id="timer-preset-label" class="text-xs text-slate-500 dark:text-slate-400 mt-1">Pomodoro Sprint (25 min)</p>
+          </div>
+
+          <div class="grid grid-cols-4 gap-1.5 mb-3">
+            <button data-mins="25" data-name="Pomodoro Sprint (25 min)" type="button" class="timer-preset px-2 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">25m</button>
+            <button data-mins="45" data-name="Wind-Down Review (45 min)" type="button" class="timer-preset px-2 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">45m</button>
+            <button data-mins="90" data-name="Study Block (1.5 hr)" type="button" class="timer-preset px-2 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">90m</button>
+            <button data-mins="120" data-name="Night Owl Coding (2 hr)" type="button" class="timer-preset px-2 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">120m</button>
+          </div>
+
+          <div class="flex gap-2">
+            <button id="timer-start-btn" type="button"
+              class="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-bold bg-midnight hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 text-white transition-colors">
+              <i data-lucide="play" class="w-3.5 h-3.5"></i>
+              Start
+            </button>
+            <button id="timer-pause-btn" type="button"
+              class="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 transition-colors">
+              <i data-lucide="pause" class="w-3.5 h-3.5"></i>
+              Pause
+            </button>
+            <button id="timer-reset-btn" type="button" title="Reset timer"
+              class="inline-flex items-center justify-center py-2 px-3 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </section>
+
+        <!-- Weekly Consistency Portfolio -->
+        <section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-sm font-bold text-midnight dark:text-white flex items-center gap-2">
+              <i data-lucide="calendar-check" class="w-4 h-4 text-emerald-600 dark:text-emerald-400"></i>
+              Weekly Consistency
+            </h2>
+            <span class="text-xs text-slate-500 dark:text-slate-400">Tap a day to log</span>
+          </div>
+          <div id="week-grid" class="grid grid-cols-7 gap-1.5"></div>
+        </section>
+
+        <!-- Quick Daily Notes / Tomorrow's Target -->
+        <section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="text-sm font-bold text-midnight dark:text-white flex items-center gap-2">
+              <i data-lucide="notebook-pen" class="w-4 h-4 text-amber-600 dark:text-amber-400"></i>
+              Kal Ka Plan / Quick Notes
+            </h2>
+            <span id="notes-saved" class="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium opacity-0 transition-opacity">Saved</span>
+          </div>
+          <textarea id="daily-notes" rows="4"
+            placeholder="Kal ke college topics (CS101–CS108), lab files, ya raat ke C++ coding goal yahan note karo..."
+            class="w-full px-3 py-2 text-xs leading-relaxed rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/70 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-midnight dark:focus:ring-indigo-500 resize-y"></textarea>
+        </section>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 px-4 py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-semibold shadow-lg opacity-0 pointer-events-none transition-all duration-200 translate-y-2">
+    Done!
+  </div>
+
+  <script>
+    (function () {
+      const STORAGE_KEY = 'divyanshu_study_portfolio_v2';
+
+      const SUBJECT_HOURS = [
+        { code: 'CS104', name: 'C++ (PPS)', hrs: 8.5, max: 9, color: 'bg-indigo-600', focus: 'Daily C++ coding, lab programs & logic' },
+        { code: 'CS107', name: 'Project & Tech', hrs: 6.5, max: 9, color: 'bg-violet-600', focus: 'Network Lab project build & GitHub' },
+        { code: 'CS102', name: 'Adv. Calculus', hrs: 6.0, max: 9, color: 'bg-amber-600', focus: 'Daily 45m numericals + Sat PYQs' },
+        { code: 'CS106', name: 'EEE', hrs: 4.0, max: 9, color: 'bg-orange-500', focus: 'Circuits, numericals & G-5 lab prep' },
+        { code: 'CS103', name: 'Comp. Arch (CA)', hrs: 4.0, max: 9, color: 'bg-sky-600', focus: 'Digital logic, diagrams & G-12 lab' },
+        { code: 'CS204', name: 'Mechanical (ME)', hrs: 3.5, max: 9, color: 'bg-teal-600', focus: 'Derivations, numericals & LAB 1' },
+        { code: 'CS101', name: 'Chem & LS (ECLS)', hrs: 3.5, max: 9, color: 'bg-emerald-600', focus: 'Reactions, short notes & 101 lab' },
+        { code: 'CS108', name: 'Comm. Skills (CSS)', hrs: 1.5, max: 9, color: 'bg-slate-500', focus: 'Seminar slides & speaking practice' }
+      ];
+
+      const SUBJECT_SEQUENCE = {
+        Mon: [
+          { step: '1', time: '5:45 PM – 6:30 PM', duration: '45 min', code: 'CS102', subject: 'Advanced Calculus (M-I)', task: 'Aaj ke lecture ke numericals solve karo aur formula sheet update karo.', tone: 'amber' },
+          { step: '2', time: '6:30 PM – 7:15 PM', duration: '45 min', code: 'CS106 / CS204', subject: 'EEE & ME Lecture Revision', task: 'Monday ke EEE aur ME class notes revise karo aur ME/PPS lab file complete karo.', tone: 'amber' },
+          { step: '3', time: '8:30 PM – 10:00 PM', duration: '1.5 hr', code: 'CS106', subject: 'Electrical & Electronics (EEE)', task: 'Circuit theorems, numericals practice aur kal ke ECLS/EEE lab ki tayari.', tone: 'orange' },
+          { step: '4', time: '10:30 PM – 12:30 AM', duration: '2.0 hr', code: 'CS104', subject: 'C++ (PPS) Deep Coding', task: 'C++ programs (loops, arrays, functions) code karo + G-12 lab problems solve karo.', tone: 'indigo' },
+          { step: '5', time: '12:30 AM – 1:15 AM', duration: '45 min', code: 'CS108 / Recap', subject: 'CSS Prep & Formula Recap', task: 'Kal subah 9 AM CSS seminar ki tayari (20m) + Maths/EEE formulas quick review (25m).', tone: 'teal' }
+        ],
+        Tue: [
+          { step: '1', time: '5:45 PM – 6:30 PM', duration: '45 min', code: 'CS102', subject: 'Advanced Calculus (M-I)', task: 'Aaj ke class examples bina dekhe dobara solve karo.', tone: 'amber' },
+          { step: '2', time: '6:30 PM – 7:15 PM', duration: '45 min', code: 'CS101 / CS204', subject: 'ECLS & ME Daily Revision', task: 'Tuesday ke ECLS aur ME notes read karo aur key definitions highlight karo.', tone: 'amber' },
+          { step: '3', time: '8:30 PM – 10:00 PM', duration: '1.5 hr', code: 'CS103', subject: 'Computer Architecture (CA)', task: 'Block diagrams, memory/ALU concepts aur previous year questions practice karo.', tone: 'orange' },
+          { step: '4', time: '10:30 PM – 12:30 AM', duration: '2.0 hr', code: 'CS107', subject: 'Project & Web/Tech Skills', task: 'G-01 Network Lab project work ya apna personal coding/web dev build karo.', tone: 'indigo' },
+          { step: '5', time: '12:30 AM – 1:15 AM', duration: '45 min', code: 'CS104 / Recap', subject: 'C++ Syntax & Kal Ka Preview', task: 'Kal ke PPS/ME lab programs ka dry-run aur CA diagrams quick recap.', tone: 'teal' }
+        ],
+        Wed: [
+          { step: '1', time: '5:45 PM – 6:30 PM', duration: '45 min', code: 'CS102', subject: 'Advanced Calculus (M-I)', task: 'Subah 9 AM wale Calculus lecture ke practice problems solve karo.', tone: 'amber' },
+          { step: '2', time: '6:30 PM – 7:15 PM', duration: '45 min', code: 'CS101 / CS103', subject: 'ECLS & CA Revision', task: 'Wednesday ke ECLS aur CA class notes revise karo + pending lab record likho.', tone: 'amber' },
+          { step: '3', time: '8:30 PM – 10:00 PM', duration: '1.5 hr', code: 'CS204', subject: 'Mechanical Engineering (ME)', task: 'ME numericals, derivations aur LAB 1 concepts practice karo.', tone: 'orange' },
+          { step: '4', time: '10:30 PM – 12:30 AM', duration: '2.0 hr', code: 'CS104', subject: 'C++ (PPS) Problem Solving', task: 'C++ DSA basics, pointers/strings aur lab questions khud code karke run karo.', tone: 'indigo' },
+          { step: '5', time: '12:30 AM – 1:15 AM', duration: '45 min', code: 'Recap', subject: 'Quick Formulas & Lab Check', task: 'ME/Maths formulas review + kal ke CA/PROJ lab ke liye files ready karo.', tone: 'teal' }
+        ],
+        Thu: [
+          { step: '1', time: '5:45 PM – 6:30 PM', duration: '45 min', code: 'CS102', subject: 'Advanced Calculus (M-I)', task: 'Calculus exercise questions aur tough steps practice karo.', tone: 'amber' },
+          { step: '2', time: '6:30 PM – 7:15 PM', duration: '45 min', code: 'CS106 / CS103', subject: 'EEE & CA Daily Revision', task: 'Thursday ke EEE aur CA lectures ka quick revision aur short notes banao.', tone: 'amber' },
+          { step: '3', time: '8:30 PM – 10:00 PM', duration: '1.5 hr', code: 'CS101', subject: 'Engg. Chemistry & LS (ECLS)', task: 'Chemical reactions, mechanisms, unit theory aur exam PYQs padho.', tone: 'orange' },
+          { step: '4', time: '10:30 PM – 12:30 AM', duration: '2.0 hr', code: 'CS107', subject: 'Project (PROJ) & Coding Build', task: 'Project implementation, documentation aur GitHub commits push karo.', tone: 'indigo' },
+          { step: '5', time: '12:30 AM – 1:15 AM', duration: '45 min', code: 'Recap', subject: 'ECLS & EEE Quick Recap', task: 'Reactions/formulas revise karo aur Friday ke classes ka plan dekho.', tone: 'teal' }
+        ],
+        Fri: [
+          { step: '1', time: '5:45 PM – 6:30 PM', duration: '45 min', code: 'CS102', subject: 'Advanced Calculus (M-I)', task: 'Poore hafte ke Calculus topics ka mixed problem set solve karo.', tone: 'amber' },
+          { step: '2', time: '6:30 PM – 7:15 PM', duration: '45 min', code: 'CS101 / CS204', subject: 'ECLS & ME Weekly Notes', task: 'Friday ke lectures revise karo aur week ke incomplete notes finish karo.', tone: 'amber' },
+          { step: '3', time: '8:30 PM – 10:00 PM', duration: '1.5 hr', code: 'CS103 + CS106', subject: 'CA (45m) + EEE (45m) PYQs', task: 'Dono subjects ke week ke weak topics aur previous year questions solve karo.', tone: 'orange' },
+          { step: '4', time: '10:30 PM – 12:30 AM', duration: '2.0 hr', code: 'CS104', subject: 'C++ (PPS) Mini-Challenge', task: '5–6 C++ coding problems solve karo bina solution dekhe.', tone: 'indigo' },
+          { step: '5', time: '12:30 AM – 1:15 AM', duration: '45 min', code: 'Weekly Wrap', subject: 'Backlog List & Weekend Plan', task: 'Saturday ke liye pending assignments aur backlog topics ki list banao.', tone: 'teal' }
+        ],
+        Sat: [
+          { step: '1', time: '11:00 AM – 12:30 PM', duration: '1.5 hr', code: 'CS102', subject: 'Advanced Calculus PYQs', task: 'Is hafte padhe hue Calculus units ke exam-level questions solve karo.', tone: 'amber' },
+          { step: '2', time: '12:30 PM – 2:00 PM', duration: '1.5 hr', code: 'CS101 + CS204', subject: 'ECLS & ME Backlog / Lab Files', task: 'Lab manuals complete karo aur ECLS/ME ke pending topics cover karo.', tone: 'orange' },
+          { step: '3', time: '5:00 PM – 7:00 PM', duration: '2.0 hr', code: 'CS104', subject: 'C++ (PPS) Coding Sprint', task: 'C++ concepts deep practice + debugging exercises.', tone: 'indigo' },
+          { step: '4', time: '10:30 PM – 11:30 PM', duration: '1.0 hr', code: 'CS108', subject: 'Comm. Skills & Seminar (CSS)', task: 'Presentation slides, speaking points ya seminar topic tayar karo.', tone: 'teal' }
+        ],
+        Sun: [
+          { step: '1', time: '11:00 AM – 12:30 PM', duration: '1.5 hr', code: 'CS103 + CS106', subject: 'CA & EEE Full Revision', task: '45m CA + 45m EEE — diagrams, circuits aur formulas revise karo.', tone: 'amber' },
+          { step: '2', time: '4:30 PM – 7:00 PM', duration: '2.5 hr', code: 'CS107', subject: 'Project & Portfolio Build Sprint', task: 'College Project (CS107) ya apna web/coding project aage badhao + GitHub push.', tone: 'indigo' },
+          { step: '3', time: '9:30 PM – 10:30 PM', duration: '1.0 hr', code: 'CS104 / All', subject: 'Weekly Self-Test & Next Week Prep', task: 'Short self-quiz lo aur Monday 9 AM ECLS/EEE lab ke liye bag ready karo.', tone: 'teal' }
+        ]
+      };
+
+      const MODE_PRESETS = {
+        weekday: {
+          label: 'Weekday Study Checklist (Mon – Fri)',
+          subtitle: 'College 9:00 AM – 3:30 PM • ~5.75 hrs self-study outside college',
+          hoursSub: '3.75h College • 2h C++/Proj',
+          sleepWindow: '1:30 – 8:00 AM',
+          sleepSub: '~6h 30m (9 AM college)',
+          tasks: [
+            { id: 'wd-1', label: 'College aakar 20–30 min power nap / recharge', time: '4:30 PM – 5:45 PM', hours: 0, category: 'Shaam (College & Exams)', checked: false, custom: false },
+            { id: 'wd-2', label: 'CS102 Adv. Calculus (45m) + Aaj ke lectures revision (45m)', time: '5:45 PM – 7:15 PM (1.5 hr)', hours: 1.5, category: 'Shaam (College & Exams)', checked: false, custom: false },
+            { id: 'wd-3', label: 'Daily Core Subject: EEE / CA / ME / ECLS (sequence ke hisaab se)', time: '8:30 PM – 10:00 PM (1.5 hr)', hours: 1.5, category: 'Shaam (College & Exams)', checked: false, custom: false },
+            { id: 'wd-4', label: 'CS104 C++ (PPS) Coding / CS107 Project Deep Work', time: '10:30 PM – 12:30 AM (2 hr)', hours: 2.0, category: 'Raat (Coding & Revision)', checked: false, custom: false },
+            { id: 'wd-5', label: 'Formulas recap, CSS prep & kal ke college topics preview', time: '12:30 AM – 1:15 AM (45 min)', hours: 0.75, category: 'Raat (Coding & Revision)', checked: false, custom: false },
+            { id: 'wd-6', label: '1:30 AM tak lights off (phone door)', time: '1:15 AM – 1:30 AM', hours: 0, category: 'Raat (Coding & Revision)', checked: false, custom: false }
+          ]
+        },
+        weekend: {
+          label: 'Weekend Study Checklist (Sat – Sun)',
+          subtitle: 'Extra rest + CS102/ECLS/ME backlog + C++ & Project sprint',
+          hoursSub: '3h Backlog/PYQs • 2.5h C++/Proj',
+          sleepWindow: '1:30 – 9:00 AM',
+          sleepSub: '~7h 30m weekend rest',
+          tasks: [
+            { id: 'we-1', label: 'CS102 Calculus PYQs + ECLS/ME lab files & backlog clear karo', time: '11:00 AM – 1:30 PM (2.5 hr)', hours: 2.5, category: 'Shaam (College & Exams)', checked: false, custom: false },
+            { id: 'we-2', label: 'CS104 C++ Sprint ya CS107 Project build & GitHub push', time: '4:30 PM – 7:00 PM (2.5 hr)', hours: 2.5, category: 'Raat (Coding & Revision)', checked: false, custom: false },
+            { id: 'we-3', label: 'CS103 CA / CS106 EEE revision & CS108 CSS seminar prep', time: '9:30 PM – 10:30 PM (1 hr)', hours: 1.0, category: 'Shaam (College & Exams)', checked: false, custom: false },
+            { id: 'we-4', label: 'Monday 9 AM lab/classes ka bag aur plan ready karo', time: '10:30 PM – 11:00 PM', hours: 0, category: 'Raat (Coding & Revision)', checked: false, custom: false }
+          ]
+        },
+        exam: {
+          label: 'Exam-Week Checklist (High Focus)',
+          subtitle: 'Night-owl slot shifted to tough subjects (CS102, EEE, CA, ME, ECLS)',
+          hoursSub: '5.75h Full Semester Exam Prep',
+          sleepWindow: '1:30 – 8:00 AM',
+          sleepSub: 'No all-nighters before exam',
+          tasks: [
+            { id: 'ex-1', label: 'Power nap & light snacks after college', time: '4:30 PM – 5:45 PM', hours: 0, category: 'Shaam (College & Exams)', checked: false, custom: false },
+            { id: 'ex-2', label: 'Next exam subject: high-weightage units & short notes', time: '5:45 PM – 7:15 PM (1.5 hr)', hours: 1.5, category: 'Shaam (College & Exams)', checked: false, custom: false },
+            { id: 'ex-3', label: 'Timed LNCT previous year paper (PYQ) solve karo', time: '8:30 PM – 10:00 PM (1.5 hr)', hours: 1.5, category: 'Shaam (College & Exams)', checked: false, custom: false },
+            { id: 'ex-4', label: 'Tough numericals / derivations / C++ dry-runs deep practice', time: '10:30 PM – 12:30 AM (2 hr)', hours: 2.0, category: 'Raat (Coding & Revision)', checked: false, custom: false },
+            { id: 'ex-5', label: 'Formula sheet, circuits & key diagrams quick recap', time: '12:30 AM – 1:15 AM (45 min)', hours: 0.75, category: 'Raat (Coding & Revision)', checked: false, custom: false },
+            { id: 'ex-6', label: '1:30 AM sharp lights off (memory consolidation)', time: '1:15 AM – 1:30 AM', hours: 0, category: 'Raat (Coding & Revision)', checked: false, custom: false }
+          ]
+        }
+      };
+
+      const WEEK_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+      function getTodayShort() {
+        const map = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        return map[new Date().getDay()] || 'Mon';
+      }
+
+      function createDefaultState() {
+        return {
+          mode: 'weekday',
+          filter: 'all',
+          selectedSeqDay: getTodayShort(),
+          dark: false,
+          tasksByMode: {
+            weekday: JSON.parse(JSON.stringify(MODE_PRESETS.weekday.tasks)),
+            weekend: JSON.parse(JSON.stringify(MODE_PRESETS.weekend.tasks)),
+            exam: JSON.parse(JSON.stringify(MODE_PRESETS.exam.tasks))
+          },
+          weekLog: { Mon: false, Tue: false, Wed: false, Thu: false, Fri: false, Sat: false, Sun: false },
+          notes: ''
+        };
+      }
+
+      function loadState() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return createDefaultState();
+          const parsed = JSON.parse(raw);
+          const def = createDefaultState();
+          return {
+            mode: MODE_PRESETS[parsed.mode] ? parsed.mode : def.mode,
+            filter: parsed.filter || 'all',
+            selectedSeqDay: SUBJECT_SEQUENCE[parsed.selectedSeqDay] ? parsed.selectedSeqDay : def.selectedSeqDay,
+            dark: Boolean(parsed.dark),
+            tasksByMode: {
+              weekday: Array.isArray(parsed.tasksByMode && parsed.tasksByMode.weekday) ? parsed.tasksByMode.weekday : def.tasksByMode.weekday,
+              weekend: Array.isArray(parsed.tasksByMode && parsed.tasksByMode.weekend) ? parsed.tasksByMode.weekend : def.tasksByMode.weekend,
+              exam: Array.isArray(parsed.tasksByMode && parsed.tasksByMode.exam) ? parsed.tasksByMode.exam : def.tasksByMode.exam
+            },
+            weekLog: Object.assign({}, def.weekLog, parsed.weekLog || {}),
+            notes: typeof parsed.notes === 'string' ? parsed.notes : ''
+          };
+        } catch (e) {
+          return createDefaultState();
+        }
+      }
+
+      let state = loadState();
+
+      function saveState() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch (e) {
+          // Ignore storage errors in restricted environments
+        }
+      }
+
+      let toastTimer = null;
+      function showToast(msg) {
+        const toast = document.getElementById('toast');
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.classList.remove('opacity-0', 'translate-y-2');
+        toast.classList.add('opacity-100', 'translate-y-0');
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toast.classList.add('opacity-0', 'translate-y-2');
+          toast.classList.remove('opacity-100', 'translate-y-0');
+        }, 2000);
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      function applyTheme() {
+        const html = document.documentElement;
+        const label = document.getElementById('theme-label');
+        const icon = document.getElementById('theme-icon');
+        if (state.dark) {
+          html.classList.add('dark');
+          if (label) label.textContent = 'Day Mode';
+          if (icon) icon.setAttribute('data-lucide', 'sun');
+        } else {
+          html.classList.remove('dark');
+          if (label) label.textContent = 'Night Mode';
+          if (icon) icon.setAttribute('data-lucide', 'moon');
+        }
+        if (window.lucide) window.lucide.createIcons();
+      }
+
+      function renderModes() {
+        ['weekday', 'weekend', 'exam'].forEach((m) => {
+          const btn = document.getElementById('mode-' + m);
+          if (!btn) return;
+          if (state.mode === m) {
+            btn.className = 'mode-btn px-3 py-1.5 text-xs font-bold rounded-lg bg-white dark:bg-slate-900 text-midnight dark:text-white shadow-sm transition-colors';
+          } else {
+            btn.className = 'mode-btn px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors';
+          }
+        });
+      }
+
+      function renderFilters() {
+        document.querySelectorAll('.filter-tab').forEach((btn) => {
+          const f = btn.getAttribute('data-filter');
+          if (f === state.filter) {
+            btn.className = 'filter-tab px-3 py-1.5 rounded-lg text-xs font-bold bg-midnight text-white dark:bg-indigo-600 transition-colors';
+          } else {
+            btn.className = 'filter-tab px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors';
+          }
+        });
+      }
+
+      function renderSubjectSequence() {
+        const tabsEl = document.getElementById('seq-day-tabs');
+        const listEl = document.getElementById('seq-day-list');
+        const hoursEl = document.getElementById('subject-hours-grid');
+
+        if (tabsEl) {
+          tabsEl.innerHTML = WEEK_DAYS.map((day) => {
+            const active = day === state.selectedSeqDay;
+            return (
+              '<button type="button" data-seq-day="' + day + '" ' +
+                'class="px-2.5 py-1 rounded-lg text-xs font-bold transition-colors ' +
+                (active
+                  ? 'bg-white dark:bg-slate-900 text-midnight dark:text-white shadow-sm'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white') + '">' +
+                day +
+              '</button>'
+            );
+          }).join('');
+        }
+
+        if (listEl) {
+          const items = SUBJECT_SEQUENCE[state.selectedSeqDay] || SUBJECT_SEQUENCE.Mon;
+          const toneMap = {
+            amber: { border: 'border-l-amber-600', badge: 'bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300', num: 'bg-amber-600' },
+            orange: { border: 'border-l-orange-500', badge: 'bg-orange-50 text-orange-800 dark:bg-orange-950/60 dark:text-orange-300', num: 'bg-orange-500' },
+            indigo: { border: 'border-l-indigo-600', badge: 'bg-indigo-50 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300', num: 'bg-indigo-600' },
+            teal: { border: 'border-l-teal-600', badge: 'bg-teal-50 text-teal-800 dark:bg-teal-950/60 dark:text-teal-300', num: 'bg-teal-600' }
+          };
+
+          listEl.innerHTML = items.map((item) => {
+            const t = toneMap[item.tone] || toneMap.indigo;
+            return (
+              '<div class="p-3.5 rounded-xl border border-slate-200 dark:border-slate-700/80 border-l-4 ' + t.border + ' bg-slate-50/70 dark:bg-slate-800/60 space-y-1.5">' +
+                '<div class="flex items-center justify-between gap-2">' +
+                  '<div class="flex items-center gap-2 min-w-0">' +
+                    '<span class="w-5 h-5 rounded-full ' + t.num + ' text-white text-[11px] font-bold flex items-center justify-center shrink-0">' + escapeHtml(item.step) + '</span>' +
+                    '<span class="text-xs font-extrabold px-2 py-0.5 rounded-md ' + t.badge + ' shrink-0">' + escapeHtml(item.code) + '</span>' +
+                    '<span class="text-sm font-bold text-slate-900 dark:text-white truncate">' + escapeHtml(item.subject) + '</span>' +
+                  '</div>' +
+                  '<span class="text-xs font-extrabold text-midnight dark:text-indigo-300 shrink-0">' + escapeHtml(item.duration) + '</span>' +
+                '</div>' +
+                '<p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">' + escapeHtml(item.task) + '</p>' +
+                '<div class="text-[11px] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1">' +
+                  '<i data-lucide="clock" class="w-3 h-3"></i>' + escapeHtml(item.time) +
+                '</div>' +
+              '</div>'
+            );
+          }).join('');
+        }
+
+        if (hoursEl) {
+          hoursEl.innerHTML = SUBJECT_HOURS.map((sub) => {
+            const widthPct = Math.min(100, Math.round((sub.hrs / sub.max) * 100));
+            return (
+              '<div class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40">' +
+                '<div class="flex items-center justify-between gap-1 text-xs">' +
+                  '<span class="font-bold text-slate-800 dark:text-slate-100 truncate">' + escapeHtml(sub.code + ' • ' + sub.name) + '</span>' +
+                  '<span class="font-extrabold text-midnight dark:text-indigo-300 shrink-0">' + sub.hrs + 'h</span>' +
+                '</div>' +
+                '<div class="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden mt-1.5">' +
+                  '<div class="h-full ' + sub.color + ' rounded-full" style="width: ' + widthPct + '%"></div>' +
+                '</div>' +
+                '<p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 truncate" title="' + escapeHtml(sub.focus) + '">' + escapeHtml(sub.focus) + '</p>' +
+              '</div>'
+            );
+          }).join('');
+        }
+
+        if (window.lucide) window.lucide.createIcons();
+      }
+
+      function renderStats() {
+        const tasks = state.tasksByMode[state.mode] || [];
+        const total = tasks.length;
+        const done = tasks.filter((t) => t.checked).length;
+        const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+        const ring = document.getElementById('progress-ring');
+        const circumference = 138.23;
+        if (ring) {
+          ring.style.strokeDashoffset = String(circumference - (pct / 100) * circumference);
+        }
+        document.getElementById('progress-pct').textContent = pct + '%';
+        document.getElementById('progress-count').textContent = done + ' / ' + total;
+
+        const totalHrs = tasks.reduce((sum, t) => sum + (Number(t.hours) || 0), 0);
+        const doneHrs = tasks.filter((t) => t.checked).reduce((sum, t) => sum + (Number(t.hours) || 0), 0);
+        document.getElementById('hours-logged').textContent = doneHrs.toFixed(1) + ' / ' + totalHrs.toFixed(2).replace(/\.00$/, '') + 'h';
+
+        const preset = MODE_PRESETS[state.mode];
+        document.getElementById('hours-sub').textContent = preset.hoursSub;
+        document.getElementById('sleep-window').textContent = preset.sleepWindow;
+        document.getElementById('sleep-sub').textContent = preset.sleepSub;
+        document.getElementById('checklist-heading').textContent = preset.label;
+        document.getElementById('checklist-subtitle').textContent = preset.subtitle;
+
+        const loggedDays = WEEK_DAYS.filter((d) => state.weekLog[d]).length;
+        document.getElementById('week-days-count').textContent = loggedDays + ' / 7 days';
+      }
+
+      function renderTasks() {
+        const container = document.getElementById('task-list');
+        if (!container) return;
+        const tasks = state.tasksByMode[state.mode] || [];
+        const visible = state.filter === 'all' ? tasks : tasks.filter((t) => t.category === state.filter);
+
+        if (visible.length === 0) {
+          container.innerHTML = '<div class="text-center py-8 text-xs text-slate-500 dark:text-slate-400">Is category mein abhi koi goal nahi hai. Neeche se naya goal add karo!</div>';
+          return;
+        }
+
+        container.innerHTML = visible.map((task) => {
+          const isEve = task.category.indexOf('Shaam') === 0;
+          const borderAccent = isEve
+            ? 'border-l-amber-600 dark:border-l-amber-500'
+            : 'border-l-indigo-700 dark:border-l-indigo-400';
+          const badgeStyle = isEve
+            ? 'bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300'
+            : 'bg-indigo-50 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300';
+          const checkedBg = task.checked
+            ? 'bg-slate-50/80 dark:bg-slate-800/40 opacity-75'
+            : 'bg-white dark:bg-slate-800/80 hover:border-slate-300 dark:hover:border-slate-600';
+
+          return (
+            '<div class="task-enter flex items-start gap-3 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700/80 border-l-4 ' + borderAccent + ' ' + checkedBg + ' transition-all">' +
+              '<button type="button" data-action="toggle" data-id="' + escapeHtml(task.id) + '" aria-label="Toggle task" ' +
+                'class="mt-0.5 w-5 h-5 rounded-md border flex items-center justify-center shrink-0 transition-colors ' +
+                (task.checked
+                  ? 'bg-emerald-600 border-emerald-600 text-white'
+                  : 'border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 hover:border-midnight') + '">' +
+                (task.checked ? '<i data-lucide="check" class="w-3.5 h-3.5"></i>' : '') +
+              '</button>' +
+              '<div class="flex-1 min-w-0">' +
+                '<div class="flex flex-wrap items-center gap-2">' +
+                  '<span class="text-sm font-semibold ' + (task.checked ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-100') + '">' +
+                    escapeHtml(task.label) +
+                  '</span>' +
+                '</div>' +
+                '<div class="flex flex-wrap items-center gap-2 mt-1.5">' +
+                  (task.time ? '<span class="inline-flex items-center gap-1 text-[11px] font-medium text-slate-500 dark:text-slate-400"><i data-lucide="clock" class="w-3 h-3"></i>' + escapeHtml(task.time) + '</span>' : '') +
+                  '<span class="text-[10px] font-semibold px-2 py-0.5 rounded-md ' + badgeStyle + '">' + escapeHtml(task.category) + '</span>' +
+                '</div>' +
+              '</div>' +
+              (task.custom
+                ? '<button type="button" data-action="delete" data-id="' + escapeHtml(task.id) + '" title="Remove goal" class="p-1 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>'
+                : '') +
+            '</div>'
+          );
+        }).join('');
+
+        if (window.lucide) window.lucide.createIcons();
+      }
+
+      function renderWeekGrid() {
+        const grid = document.getElementById('week-grid');
+        if (!grid) return;
+        grid.innerHTML = WEEK_DAYS.map((day) => {
+          const active = Boolean(state.weekLog[day]);
+          return (
+            '<button type="button" data-day="' + day + '" ' +
+              'class="week-day-btn flex flex-col items-center justify-center py-2.5 rounded-xl border text-xs font-bold transition-all ' +
+              (active
+                ? 'bg-emerald-600 border-emerald-600 text-white shadow-sm'
+                : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-emerald-400') + '">' +
+              '<span>' + day + '</span>' +
+              '<span class="mt-1 text-[10px]">' + (active ? '✓' : '·') + '</span>' +
+            '</button>'
+          );
+        }).join('');
+      }
+
+      function renderAll() {
+        applyTheme();
+        renderModes();
+        renderFilters();
+        renderSubjectSequence();
+        renderTasks();
+        renderStats();
+        renderWeekGrid();
+        const notesEl = document.getElementById('daily-notes');
+        if (notesEl && notesEl.value !== state.notes) {
+          notesEl.value = state.notes;
+        }
+      }
+
+      // Event Listeners
+      ['weekday', 'weekend', 'exam'].forEach((m) => {
+        const btn = document.getElementById('mode-' + m);
+        if (btn) {
+          btn.addEventListener('click', () => {
+            state.mode = m;
+            state.filter = 'all';
+            saveState();
+            renderAll();
+          });
+        }
+      });
+
+      document.getElementById('theme-toggle').addEventListener('click', () => {
+        state.dark = !state.dark;
+        saveState();
+        applyTheme();
+      });
+
+      document.getElementById('seq-day-tabs').addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-seq-day]');
+        if (!btn) return;
+        const day = btn.getAttribute('data-seq-day');
+        if (SUBJECT_SEQUENCE[day]) {
+          state.selectedSeqDay = day;
+          saveState();
+          renderSubjectSequence();
+        }
+      });
+
+      document.querySelectorAll('.filter-tab').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          state.filter = btn.getAttribute('data-filter');
+          saveState();
+          renderFilters();
+          renderTasks();
+        });
+      });
+
+      document.getElementById('task-list').addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-action]');
+        if (!btn) return;
+        const action = btn.getAttribute('data-action');
+        const id = btn.getAttribute('data-id');
+        const list = state.tasksByMode[state.mode];
+        if (!list) return;
+
+        if (action === 'toggle') {
+          const item = list.find((t) => t.id === id);
+          if (item) {
+            item.checked = !item.checked;
+            saveState();
+            renderTasks();
+            renderStats();
+            const allDone = list.length > 0 && list.every((t) => t.checked);
+            if (allDone) {
+              showToast('Shabaash! Aaj ke saare study blocks complete ho gaye!');
+            }
+          }
+        } else if (action === 'delete') {
+          state.tasksByMode[state.mode] = list.filter((t) => t.id !== id);
+          saveState();
+          renderTasks();
+          renderStats();
+          showToast('Goal remove kar diya.');
+        }
+      });
+
+      document.getElementById('add-task-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const titleInput = document.getElementById('new-task-title');
+        const catSelect = document.getElementById('new-task-cat');
+        const timeInput = document.getElementById('new-task-time');
+        const label = titleInput.value.trim();
+        if (!label) {
+          showToast('Pehle study goal ka naam likho.');
+          return;
+        }
+        const newTask = {
+          id: 'custom-' + Date.now(),
+          label: label,
+          time: timeInput.value.trim() || 'Custom Goal',
+          hours: 0.5,
+          category: catSelect.value,
+          checked: false,
+          custom: true
+        };
+        state.tasksByMode[state.mode].push(newTask);
+        titleInput.value = '';
+        timeInput.value = '';
+        saveState();
+        renderTasks();
+        renderStats();
+        showToast('Naya study goal add ho gaya!');
+      });
+
+      document.getElementById('reset-day-btn').addEventListener('click', () => {
+        const list = state.tasksByMode[state.mode] || [];
+        list.forEach((t) => { t.checked = false; });
+        saveState();
+        renderTasks();
+        renderStats();
+        showToast('Aaj ke saare ticks reset ho gaye.');
+      });
+
+      document.getElementById('week-grid').addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-day]');
+        if (!btn) return;
+        const day = btn.getAttribute('data-day');
+        state.weekLog[day] = !state.weekLog[day];
+        saveState();
+        renderWeekGrid();
+        renderStats();
+      });
+
+      let notesTimeout = null;
+      document.getElementById('daily-notes').addEventListener('input', (e) => {
+        state.notes = e.target.value;
+        saveState();
+        const savedEl = document.getElementById('notes-saved');
+        if (savedEl) {
+          savedEl.classList.remove('opacity-0');
+          if (notesTimeout) clearTimeout(notesTimeout);
+          notesTimeout = setTimeout(() => savedEl.classList.add('opacity-0'), 1400);
+        }
+      });
+
+      // Focus Timer Logic
+      let timerTotalSec = 25 * 60;
+      let timerRemainingSec = 25 * 60;
+      let timerInterval = null;
+
+      function formatTime(sec) {
+        const m = Math.floor(sec / 60);
+        const s = sec % 60;
+        return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+      }
+
+      function updateTimerUI(statusText) {
+        document.getElementById('timer-display').textContent = formatTime(timerRemainingSec);
+        if (statusText) {
+          document.getElementById('timer-status').textContent = statusText;
+        }
+      }
+
+      document.querySelectorAll('.timer-preset').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+          }
+          const mins = Number(btn.getAttribute('data-mins')) || 25;
+          const name = btn.getAttribute('data-name') || (mins + ' min');
+          timerTotalSec = mins * 60;
+          timerRemainingSec = timerTotalSec;
+          document.getElementById('timer-preset-label').textContent = name;
+          updateTimerUI('Ready');
+        });
+      });
+
+      document.getElementById('timer-start-btn').addEventListener('click', () => {
+        if (timerInterval) return;
+        if (timerRemainingSec <= 0) {
+          timerRemainingSec = timerTotalSec;
+        }
+        updateTimerUI('Focusing...');
+        timerInterval = setInterval(() => {
+          timerRemainingSec -= 1;
+          if (timerRemainingSec <= 0) {
+            timerRemainingSec = 0;
+            clearInterval(timerInterval);
+            timerInterval = null;
+            updateTimerUI('Completed!');
+            showToast('Focus session complete! Chhota break le lo.');
+          } else {
+            updateTimerUI('Focusing...');
+          }
+        }, 1000);
+      });
+
+      document.getElementById('timer-pause-btn').addEventListener('click', () => {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+          updateTimerUI('Paused');
+        }
+      });
+
+      document.getElementById('timer-reset-btn').addEventListener('click', () => {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+        timerRemainingSec = timerTotalSec;
+        updateTimerUI('Ready');
+      });
+
+      renderAll();
+    })();
+  </script>
+</body>
+</html>
